@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laozi | Way of the Dao</title>
+<style>
+/* --- 기본 설정 --- */
+body {
+  margin: 0;
+  font-family: 'Playfair Display', 'Georgia', serif;
+  color: #f1f5f9;
+  background: #0f172a; /* 폴백 배경색 */
+  background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), 
+                    url('https://miro.medium.com/v2/0*39ZwGGlQXCqX1n43.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  user-select: none;
+  line-height: 1.7;
+}
+
+/* --- 헤더 --- */
+header {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(15, 23, 42, 0.8)),
+              url('https://uploads7.wikiart.org/images/nicholas-roerich/laozi-1924.jpg!Large.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.header-text {
+  text-align: center;
+  width: 90%;
+  max-width: 900px;
+  animation: fadeIn 1.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+header h1 { 
+  font-size: clamp(3rem, 10vw, 5.5rem); 
+  margin: 0; 
+  letter-spacing: 4px; 
+  font-weight: 700;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
+
+header p#subtitle { 
+  font-size: 1.4rem; 
+  margin-top: 10px; 
+  font-weight: 300; 
+  opacity: 0.9;
+  font-style: italic;
+}
+
+/* --- 버튼 스타일 --- */
+button {
+  padding: 14px 36px;
+  margin-top: 30px;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 50px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  backdrop-filter: blur(8px);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+button:hover { 
+  background: #fff; 
+  color: #0f172a; 
+  transform: translateY(-3px); 
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* --- 인용구 박스 --- */
+.quote {
+  margin-top: 40px;
+  font-size: 1.6rem;
+  line-height: 1.4;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 2.4em;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+/* --- 사이드바 --- */
+.menu-btn { 
+  position: fixed; top: 30px; left: 30px; 
+  width: 30px; height: 22px; 
+  display: flex; flex-direction: column; justify-content: space-between; 
+  cursor: pointer; z-index: 1100; 
+}
+.menu-btn span { height: 2px; width: 100%; background: white; transition: 0.3s; }
+
+.sidebar {
+  position: fixed; top: 0; left: 0; transform: translateX(-100%);
+  width: 300px; height: 100vh; background: rgba(15,23,42,0.9);
+  backdrop-filter: blur(20px); padding: 100px 40px; transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1); z-index: 1050;
+}
+.sidebar.open { transform: translateX(0); }
+.sidebar h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 40px; color: #94a3b8; }
+.sidebar a { display: block; color: #f1f5f9; text-decoration: none; margin: 20px 0; font-size: 1.2rem; transition: 0.3s; cursor: pointer; }
+.sidebar a:hover { color: #38bdf8; transform: translateX(10px); }
+
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: 0.5s; z-index: 1000; }
+.overlay.show { opacity: 1; pointer-events: all; }
+
+/* --- 메뉴 버튼 스타일 (시인성 강화) --- */
+.menu-btn { 
+  position: fixed; top: 30px; left: 30px; 
+  width: 50px; height: 50px; /* 버튼 영역 확보 */
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  cursor: pointer; z-index: 1100;
+  background: rgba(0, 0, 0, 0.3); /* 반투명 어두운 배경 */
+  backdrop-filter: blur(10px);    /* 블러 효과 */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* 은은한 테두리 */
+  border-radius: 50%;             /* 원형 버튼 */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* 그림자 추가 */
+  transition: all 0.3s ease;
+}
+
+/* 버튼 호버 시 효과 */
+.menu-btn:hover {
+  background: rgba(56, 189, 248, 0.4); /* 호버 시 하늘색 느낌 추가 */
+  transform: scale(1.1);
+}
+
+.menu-btn span { 
+  height: 2px; width: 20px; background: white; 
+  margin: 2px 0; /* 선 사이 간격 조절 */
+  transition: 0.3s; 
+}
+
+/* --- 콘텐츠 영역 --- */
+#modeContent { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+.bio-content {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(12px);
+  padding: 60px;
+  margin-bottom: 60px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.bio-content h2 { font-size: 2rem; color: #38bdf8; margin-bottom: 25px; border-left: 4px solid #38bdf8; padding-left: 15px; }
+.bio-content h3 { font-size: 1.4rem; color: #bae6fd; margin-top: 35px; }
+.bio-content p { margin-bottom: 20px; color: #cbd5e1; }
+.bio-content ul { margin-bottom: 25px; padding-left: 20px; }
+.bio-content li { margin-bottom: 12px; color: #cbd5e1; }
+
+.content-img {
+  width: 100%;
+  border-radius: 16px;
+  margin: 40px 0;
+  filter: grayscale(20%) brightness(0.9);
+  transition: 0.5s;
+}
+.content-img:hover { filter: grayscale(0%) brightness(1); }
+
+/* --- 각주 --- */
+.footnote-link {
+  font-size: 0.7rem;
+  color: #38bdf8;
+  text-decoration: none;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 4px;
+}
+
+.tao-end-hero {
+  height: 400px;
+  margin: 50px 0;
+  border-radius: 20px;
+  background-image: url("https://wayofnature.weebly.com/uploads/1/2/6/5/12659207/walking-on-path-ma-yuan-orig_orig.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+.tao-end-hero::before {
+  content: ""; position: absolute; inset: 0; background: linear-gradient(transparent, rgba(15,23,42,0.8));
+}
+
+footer { padding: 40px 0; text-align: center; font-size: 0.75rem; color: #64748b; letter-spacing: 1px; }
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+  .bio-content { padding: 30px 20px; }
+  header h1 { font-size: 3.5rem; }
+  .sidebar { width: 80%; }
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="menu-btn" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+
+<div class="sidebar" id="sidebar">
+  <h2>Navigation</h2>
+  <a onclick="goHome()">Home</a>
+  <a onclick="showBio()">Biography</a>
+  <a onclick="showTaoism()">Philosophy of Dao</a>
+</div>
+
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<header id="mainHeader">
+  <div class="header-text">
+    <h1 id="title">Laozi</h1>
+    <p id="subtitle">"The journey of a thousand miles begins with one step."</p>
+    <button id="quoteBtn" onclick="generateQuote()">Show Quotes</button>
+    <p class="quote" id="quoteBox"></p>
+  </div>
+</header>
+
+<div id="modeContent"></div>
+
+<footer>
+
+</footer>
+
+<script>
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+const title = document.getElementById('title');
+const subtitle = document.getElementById('subtitle');
+const quoteBtn = document.getElementById('quoteBtn');
+const quoteBox = document.getElementById('quoteBox');
+const modeContent = document.getElementById('modeContent');
+const header = document.getElementById('mainHeader');
+
+function toggleMenu() {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('show');
+}
+
+function updateHeader(bgUrl) {
+  header.style.background = `linear-gradient(rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.8)), url('${bgUrl}')`;
+  header.style.backgroundSize = 'cover';
+  header.style.backgroundPosition = 'center';
+  header.style.backgroundAttachment = 'fixed';
+}
+
+function goHome() {
+  title.innerText = 'Laozi';
+  subtitle.innerText = '"The journey of a thousand miles begins with one step."';
+  quoteBtn.style.display = 'inline-block';
+  quoteBox.innerText = '';
+  modeContent.innerHTML = '';
+  updateHeader('https://uploads7.wikiart.org/images/nicholas-roerich/laozi-1924.jpg!Large.jpg');
+  toggleMenu();
+}
+
+// showBio(), showTaoism() 함수 내의 innerHTML 내용은 사용자가 제공한 텍스트를 그대로 유지하되 
+// 구조적인 클래스만 연결합니다.
+
+function showBio() {
+  title.innerText = 'Biography';
+  subtitle.innerText = '';
+  quoteBtn.style.display = 'none';
+  quoteBox.innerText = '';
+  updateHeader('https://miro.medium.com/v2/0*39ZwGGlQXCqX1n43.jpg');
+
+  modeContent.innerHTML = `
+  <div class="bio-content">
+    
+    <h2>Introduction</h2>
+    <p>Laozi is seen as one of the most important thinkers in early Chinese history and is said to have written the <em>Daodejing</em>. His ideas are closely related to Daoism - it focused on staying in balance with the natural world, not forcing outcomes, and keeping both life and leadership simple.</p>
+    <p>There are a few ideas that stand out</p>
+    <ul>
+      <li>Living in harmony with nature instead of trying to control everything</li>
+      <li>Letting things happen naturally rather than forcing results</li>
+      <li>Valuing simplicity over complexity, especially in government and daily life</li>
+    </ul>
+    <p>From a modern perspective, things are less clear. A lot of scholars don't agree with the idea that he was a historical person</p>
+    <ul>
+      <li>“Laozi” could represent multiple thinkers over time, not just one author</li>
+      <li>The Doadejing could have been built gradually</li>
+    </ul>
+    <p>Because of that, Laozi exists in two ways at once - in stories, he's a real person with an identity, but in modern analysis, he's a symbol for a set of ideas.</p>
+
+    <img class="content-img" src="https://images.squarespace-cdn.com/content/v1/58ed5944e6f2e1f4c44d9d2f/1513739008156-KTMD9FDDOA2Z4ZPD8CNQ/135076_240175.jpg" alt="Laozi by Nicholas Roerich">
+
+    <h2>Biography</h2>
+    <p>The main historical source for Laozi’s life comes from <em>Records of the Grand Historian</em> by Sima Qian, written during the Han dynasty. This text is the base for most of the stories about Laozi and created how people understand him:</p>
+    <ul>
+      <li>Laozi is said to have been present between 770-481 BCE, but there is no real proof of him being alive</li>
+      <li>He was said to be “Li Er,” or an archivist whose job was to keep records and important knowledge</li>
+      <li>Some stories talk about a meeting between Laozi and Confucious, which was seen as a symbolic moment showing the difference between their ideas</li>
+      <li>He is said to have written the <em>Daodejing</em> before leaving for the west, and after that there are no records of what happened to him</li>
+    </ul>
+    <p>Over time, these stories were added through oral and religious ways, which turned “the name Laozi . . . to represent a certain type of sage rather than an individual” <a href="https://www.britannica.com/biography/Laozi" target="_blank" class="footnote-link">[3]</a>.</p>
+
+    <h2>Modern academic perspectives on his ideas</h2>
+    <p>Modern scholars study Laozi using different approaches like analyzing texts, studying artifacts, and looking at how his ideas developed over time. Using this information, “Modern scholars discount the possibility that the Daodejing was written by only one person” <a href="https://plato.stanford.edu/entries/laozi/" target="_blank" class="footnote-link">[1]</a>.</p>
+    
+    <p><strong>Historical existence of Laozi</strong><br>
+    A lot of researchers think that Laozi is better understood as a symbol or a combined figure instead of a clear historical individual - this is also a doubt about many early biographies in Chinese history.</p>
+    <p><strong>Formation of the Daodejing</strong><br>
+    The daodejing is seen as a layered text that was built over time, not written at once. It likely came from collected sayings, teachings, and edits over different time periods. Discoveries like the Guodian bamboo slips show early versions of the text were different from each other <a href="https://brill.com/view/journals/jcph/34/4/article-p613_10.xml" target="_blank" class="footnote-link">[4]</a>.</p>
+    <p><strong>Religious transformation and myth making</strong><br>
+    Over time, Loazi's image changed a lot - he went from being seen as a philosopher to being seen as a divine/cosmic figure <a href="https://www.britannica.com/biography/Laozi" target="_blank" class="footnote-link">[3]</a>.</p>
+
+    <h2>Loazi’s thought and intellectual influence</h2>
+    <p>The philosophy linked to Laozi is built around the ideas of Dao (道) and De (德). Dao can be understood as the basic force or pattern behind everything in existence, something that can't really be fully defined. De is the way that Dao shows up in human life, especially in behavior that stays in tune with the natural order.</p>
+    <p>A key idea in his thinking was its paradox - his idea suggests that things that are seen as weak or soft can actually be stronger than what looks powerful/rigid. This isn’t about morals, but about how reality works, and where opposites depend on each other.</p>
+    <p>Some of the core ideas include</p>
+    <ul>
+      <li><strong>Wu Wei:</strong> Acting without forcing things, allowing actions to follow natural order instead of control</li>
+      <li><strong>Ziran:</strong> Naturalness and spontaneity, existing without pressure or restriction. “Naturalness encompasses basic human needs, but these are to be distinguished from desire that fuels and inflates self-gratification” <a href="https://plato.stanford.edu/entries/laozi/" target="_blank" class="footnote-link">[1]</a>.</li>
+      <li><strong>Paradoxical strength:</strong> Softness, patience, and humility can overcome force and domination</li>
+    </ul>
+    <p>These ideas ended up shaping political thought, ethical systems, medicine, and religious practice in East Asia.</p>
+
+    <h2>Conclusion</h2>
+    <p>Laozi has an interesting place in history - traditional accounts see him as the founder of Daoism, while modern scholars see him as a symbolic figure. His importance comes less from historical certainty and more from the influence of the ideas associated with him - his ideas “invite reflection on the very core of being,” which caused him to be the influence that he became <a href="https://plato.stanford.edu/entries/laozi/" target="_blank" class="footnote-link">[1]</a>.</p>
+  </div>
+  <div class="bio-content">
+
+<h2>References</h2>
+
+<div style="font-size: 0.85rem; line-height: 1.8; color: #cbd5e1;">
+
+<p style="text-indent: -20px; padding-left: 20px; margin-bottom: 12px;">
+
+“Daoism.” <em>Encyclopaedia Britannica</em>, 20 Mar. 2024, <a href="https://www.britannica.com/topic/Daoism" target="_blank" style="color: #38bdf8; text-decoration: none;">www.britannica.com/topic/Daoism</a>. Accessed 15 Apr. 2026.
+
+</p>
+
+<p style="text-indent: -20px; padding-left: 20px; margin-bottom: 12px;">
+
+Hansen, Chad. “Daoism.” <em>Stanford Encyclopedia of Philosophy</em>, Stanford University, 28 June 2020, <a href="https://plato.stanford.edu/entries/daoism/" target="_blank" style="color: #38bdf8; text-decoration: none;">plato.stanford.edu/entries/daoism/</a>. Accessed 15 Apr. 2026.
+
+</p>
+
+<p style="text-indent: -20px; padding-left: 20px; margin-bottom: 12px;">
+
+“Laozi.” <em>Encyclopaedia Britannica</em>, 14 Feb. 2024, <a href="https://www.britannica.com/biography/Laozi" target="_blank" style="color: #38bdf8; text-decoration: none;">www.britannica.com/biography/Laozi</a>. Accessed 15 Apr. 2026.
+
+</p>
+
+<p style="text-indent: -20px; padding-left: 20px; margin-bottom: 12px;">
+
+“Laozi (Lao-tzu).” <em>Internet Encyclopedia of Philosophy</em>, <a href="https://iep.utm.edu/laozi/" target="_blank" style="color: #38bdf8; text-decoration: none;">iep.utm.edu/laozi/</a>. Accessed 15 Apr. 2026.
+
+</p>
+
+<p style="text-indent: -20px; padding-left: 20px; margin-bottom: 12px;">
+
+“Zhuangzi (Chuang-tzu).” <em>Internet Encyclopedia of Philosophy</em>, <a href="https://iep.utm.edu/zhuangzi/" target="_blank" style="color: #38bdf8; text-decoration: none;">iep.utm.edu/zhuangzi/</a>. Accessed 15 Apr. 2026.
+
+</p>
+
+</div>
+
+</div>
+  `;
+  toggleMenu();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function showTaoism() {
+  title.innerText = 'Daoism';
+  subtitle.innerText = 'The Way of Nature';
+  quoteBtn.style.display = 'none';
+  quoteBox.innerText = '';
+  updateHeader('https://wayofnature.weebly.com/uploads/1/2/6/5/12659207/walking-on-path-ma-yuan-orig_orig.jpg');
+
+  modeContent.innerHTML = `
+  <h2>Introduction</h2>
+    <p>Laozi is seen as one of the most important thinkers in early Chinese history and is said to have written the <em>Daodejing</em>. His ideas are closely related to Daoism - it focused on staying in balance with the natural world, not forcing outcomes, and keeping both life and leadership simple.</p>
+    <p>There are a few ideas that stand out:</p>
+    <ul>
+      <li>Living in harmony with nature instead of trying to control everything.</li>
+      <li>Letting things happen naturally rather than forcing results.</li>
+      <li>Valuing simplicity over complexity, especially in government and daily life.</li>
+    </ul>
+    <p>From a modern perspective, things are less clear. A lot of scholars don't agree with the idea that he was a historical person:</p>
+    <ul>
+      <li>“Laozi” could represent multiple thinkers over time, not just one author.</li>
+      <li>The <em>Daodejing</em> could have been built gradually.</li>
+    </ul>
+    <p>Because of that, Laozi exists in two ways at once - in stories, he's a real person with an identity, but in modern analysis, he's a symbol for a set of ideas.</p>
+
+    <img class="content-img" src="https://images.squarespace-cdn.com/content/v1/58ed5944e6f2e1f4c44d9d2f/1513739008156-KTMD9FDDOA2Z4ZPD8CNQ/135076_240175.jpg" alt="Laozi by Nicholas Roerich">
+
+    <h2>Biography</h2>
+    <p>The main historical source for Laozi’s life comes from <em>Records of the Grand Historian</em> by Sima Qian, written during the Han dynasty. This text is the base for most of the stories about Laozi and created how people understand him:</p>
+    <ul>
+      <li>Laozi is said to have been present between 770-481 BCE, but there is no real proof of him being alive.</li>
+      <li>He was said to be “Li Er,” or an archivist whose job was to keep records and important knowledge.</li>
+      <li>Some stories talk about a meeting between Laozi and Confucius, which was seen as a symbolic moment showing the difference between their ideas.</li>
+      <li>He is said to have written the <em>Daodejing</em> before leaving for the west, and after that there are no records of what happened to him.</li>
+    </ul>
+    <p>Over time, these stories were added through oral and religious ways, which turned “the name Laozi . . . to represent a certain type of sage rather than an individual” <a href="https://www.britannica.com/biography/Laozi" target="_blank" class="footnote-link">[3]</a>.</p>
+
+    <h2>Modern Academic Perspectives on his ideas</h2>
+    <p>Modern scholars study Laozi using different approaches like analyzing texts, studying artifacts, and looking at how his ideas developed over time. Using this information, “Modern scholars discount the possibility that the Daodejing was written by only one person” <a href="https://plato.stanford.edu/entries/laozi/" target="_blank" class="footnote-link">[1]</a>.</p>
+    
+    <p><strong>Historical existence of Laozi</strong><br>
+    A lot of researchers think that Laozi is better understood as a symbol or a combined figure instead of a clear historical individual - this is also a doubt about many early biographies in Chinese history.</p>
+    
+    <p><strong>Formation of the <em>Daodejing</em></strong><br>
+    The <em>Daodejing</em> is seen as a layered text that was built over time, not written at once. It likely came from collected sayings, teachings, and edits over different time periods. Discoveries like the Guodian bamboo slips show early versions of the text were different from each other <a href="https://brill.com/view/journals/jcph/34/4/article-p613_10.xml" target="_blank" class="footnote-link">[4]</a>.</p>
+    
+    <p><strong>Religious transformation and myth making</strong><br>
+    Over time, Laozi's image changed a lot - he went from being seen as a philosopher to being seen as a divine/cosmic figure <a href="https://www.britannica.com/biography/Laozi" target="_blank" class="footnote-link">[3]</a>.</p>
+    A lot of researchers think that Laozi is better understood as a symbol or a combined figure instead of a clear historical individual - this is also a doubt about many early biographies in Chinese history.</p>
+    <p><strong>Formation of the <em>Daodejing</em></strong><br>
+    The <em>Daodejing</em> is seen as a layered text that was built over time, not written at once. It likely came from collected sayings, teachings, and edits over different time periods. Discoveries like the Guodian bamboo slips show early versions of the text were different from each other <a href="https://brill.com/view/journals/jcph/34/4/article-p613_10.xml" target="_blank" class="footnote-link">[4]</a>.</p>
+    <p><strong>Religious transformation and myth making</strong><br>
+    Over time, Laozi's image changed a lot - he went from being seen as a philosopher to being seen as a divine/cosmic figure <a href="https://www.britannica.com/biography/Laozi" target="_blank" class="footnote-link">[3]</a>.</p>
+
+    <h2>Laozi’s thought and intellectual influence</h2>
+    <p>The philosophy linked to Laozi is built around the ideas of Dao (道) and De (德). Dao can be understood as the basic force or pattern behind everything in existence, something that can't really be fully defined. De is the way that Dao shows up in human life, especially in behavior that stays in tune with the natural order.</p>
+    <p>A key idea in his thinking was its paradox - his idea suggests that things that are seen as weak or soft can actually be stronger than what looks powerful/rigid. This isn’t about morals, but about how reality works, and where opposites depend on each other.</p>
+    <p>Some of the core ideas include:</p>
+    <ul>
+      <li><strong>Wu Wei:</strong> Acting without forcing things, allowing actions to follow natural order instead of control.</li>
+      <li><strong>Ziran:</strong> Naturalness and spontaneity, existing without pressure or restriction. “Naturalness encompasses basic human needs, but these are to be distinguished from desire that fuels and inflates self-gratification” <a href="https://plato.stanford.edu/entries/laozi/" target="_blank" class="footnote-link">[1]</a>.</li>
+      <li><strong>Paradoxical strength:</strong> Softness, patience, and humility can overcome force and domination.</li>
+    </ul>
+    <p>These ideas ended up shaping political thought, ethical systems, medicine, and religious practice in East Asia.</p>
+
+    <h2>Conclusion</h2>
+    <p>Laozi has an interesting place in history - traditional accounts see him as the founder of Daoism, while modern scholars see him as a symbolic figure. His importance comes less from historical certainty and more from the influence of the ideas associated with him - his ideas “invite reflection on the very core of being,” which caused him to be the influence that he became <a href="https://plato.stanford.edu/entries/laozi/" target="_blank" class="footnote-link">[1]</a>.</p>
+  </div>
+  `;
+  toggleMenu();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function generateQuote() {
+  const quotes = [
+    'Nature does not hurry, yet everything is accomplished. (Dao De Jing Ch. 36)',
+    'He who knows does not speak. (Dao De Jing Ch. 56)',
+    'To lead people, walk behind them. (Dao De Jing Ch. 66)',
+    'Simplicity is the ultimate sophistication. (Dao De Jing Ch. 80)',
+    'When I let go of what I am, I become what I might be. (Dao De Jing Ch. 22)',
+    'There is no greater misfortune than not knowing what is enough. (Dao De Jing Ch. 46)',
+    'The rivers and seas are king of a thousand valleys because they take the lower position. (Dao De Jing Ch. 66)',
+    'Nature says few words. (Dao De Jing Ch. 22)'
+  ];
+  quoteBox.style.opacity = 0;
+  setTimeout(() => {
+    quoteBox.innerText = quotes[Math.floor(Math.random() * quotes.length)];
+    quoteBox.style.opacity = 1;
+  }, 300);
+
+  quoteBox.onclick = function() {
+    window.open('https://www.daodejing.org/', '_blank');
+  };
+}
+</script>
+</body>
+</html>
